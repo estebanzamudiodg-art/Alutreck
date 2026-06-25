@@ -27,10 +27,17 @@ Abre http://localhost:3000. Funciona de inmediato con el contenido real de respa
 > Las solicitudes que envían los visitantes quedan en `solicitudes`. Por RLS, el público
 > solo puede **crearlas**; leerlas requiere usuario autenticado (el admin, fase 2).
 
-## Ajustar colores y tipografías
 
-- Colores: bloque `:root` en `src/app/globals.css`.
-- Tipografías: `src/app/layout.tsx`.
+## Tu logo
+
+1. Copia tu archivo a `public/logo.png` (o `.svg`).
+2. En `src/components/Logo.tsx` cambia `USAR_IMAGEN = false` a `true`.
+Mientras tanto se muestra el wordmark "ALUTRECK SAS" estilizado.
+
+## Marca (colores y tipografía)
+
+- Colores: bloque `:root` en `src/app/globals.css` (azul marino #0F2D52, azul acero #2E5B88, gris aluminio #B8BEC5, etc.).
+- Tipografía: Montserrat, en `src/app/layout.tsx`.
 
 ## Imágenes y 360
 

@@ -2,24 +2,18 @@
 
 import { useState } from 'react';
 import { getBrowserClient } from '@/lib/supabase/client';
-import { CONTACTO } from '@/lib/seed-data';
+import { CONTACTO, MODELS } from '@/lib/seed-data';
 
-const TIPOS = [
-  'Botes de pesca',
-  'Embarcaciones recreativas',
-  'Embarcaciones para trabajo',
-  'Transporte fluvial',
-  'Diseños personalizados',
-  'Accesorios y equipamiento',
-];
-
-export function RequestForm({ tipoInicial = '' }: { tipoInicial?: string }) {
+export function RequestForm({ modeloInicial = '' }: { modeloInicial?: string }) {
   const [sent, setSent] = useState(false);
   const [busy, setBusy] = useState(false);
   const [f, setF] = useState({
     nombre: '', tel: '', ciudad: '', email: '',
-    tipo: tipoInicial || TIPOS[0],
-    uso: '', eslora: '', capacidad: '', motor: '', mensaje: '',
+    modelo: modeloInicial || MODELS[0].nombre,
+    // características que elige el cliente
+    eslora: '', altura_espejo: '', altura_banda: '',
+    ancho_piso: '', capacidad_carga: '', cantidad_bancas: '',
+    mensaje: '',
   });
   const set = (k: string, v: string) => setF((p) => ({ ...p, [k]: v }));
 
@@ -30,15 +24,17 @@ export function RequestForm({ tipoInicial = '' }: { tipoInicial?: string }) {
     try {
       if (supabase) {
         await supabase.from('solicitudes').insert({
-          tipo: f.tipo,
+          modelo: f.modelo,
           cliente_nombre: f.nombre,
           cliente_tel: f.tel,
           cliente_email: f.email || null,
           cliente_ciudad: f.ciudad || null,
-          uso: f.uso || null,
-          eslora_aprox: f.eslora || null,
-          capacidad_aprox: f.capacidad || null,
-          motor_pref: f.motor || null,
+          eslora: f.eslora || null,
+          altura_espejo: f.altura_espejo || null,
+          altura_banda: f.altura_banda || null,
+          ancho_piso: f.ancho_piso || null,
+          capacidad_carga: f.capacidad_carga || null,
+          cantidad_bancas: f.cantidad_bancas || null,
           mensaje: f.mensaje || null,
         });
       }
@@ -55,8 +51,8 @@ export function RequestForm({ tipoInicial = '' }: { tipoInicial?: string }) {
           <div className="ic">✓</div>
           <h3 className="disp">Solicitud enviada a revisión</h3>
           <p>
-            Recibimos tu requerimiento. Nuestro equipo lo revisa y te contacta con una propuesta
-            ajustada. También puedes escribirnos directo por WhatsApp al {CONTACTO.whatsapp}.
+            Recibimos tu requerimiento de la {f.modelo}. Nuestro equipo lo revisa y te contacta con
+            una propuesta ajustada. También puedes escribirnos por WhatsApp al {CONTACTO.whatsapp}.
           </p>
         </div>
       </div>
@@ -65,6 +61,7 @@ export function RequestForm({ tipoInicial = '' }: { tipoInicial?: string }) {
 
   return (
     <div className="form-card">
+      <div className="form-sec">Tus datos</div>
       <div className="row2">
         <div className="field"><label>Nombre completo *</label>
           <input value={f.nombre} onChange={(e) => set('nombre', e.target.value)} placeholder="Tu nombre" /></div>
@@ -77,32 +74,42 @@ export function RequestForm({ tipoInicial = '' }: { tipoInicial?: string }) {
         <div className="field"><label>Correo</label>
           <input value={f.email} onChange={(e) => set('email', e.target.value)} placeholder="correo@email.com" /></div>
       </div>
-      <div className="field"><label>Tipo de embarcación</label>
-        <select value={f.tipo} onChange={(e) => set('tipo', e.target.value)}>
-          {TIPOS.map((t) => <option key={t} value={t}>{t}</option>)}
+      <div className="field"><label>Modelo</label>
+        <select value={f.modelo} onChange={(e) => set('modelo', e.target.value)}>
+          {MODELS.map((m) => <option key={m.id} value={m.nombre}>{m.nombre}</option>)}
         </select>
       </div>
+
+      <div className="form-sec">Características de tu embarcación</div>
       <div className="row2">
-        <div className="field"><label>Uso previsto</label>
-          <input value={f.uso} onChange={(e) => set('uso', e.target.value)} placeholder="Pesca, turismo, carga…" /></div>
-        <div className="field"><label>Motor de preferencia</label>
-          <input value={f.motor} onChange={(e) => set('motor', e.target.value)} placeholder="Marca / potencia (opcional)" /></div>
+        <div className="field"><label>Eslora (longitud total)</label>
+          <input value={f.eslora} onChange={(e) => set('eslora', e.target.value)} placeholder="Ej. 7 m" /></div>
+        <div className="field"><label>Altura del espejo</label>
+          <input value={f.altura_espejo} onChange={(e) => set('altura_espejo', e.target.value)} placeholder="Ej. 50 cm" /></div>
       </div>
       <div className="row2">
-        <div className="field"><label>Eslora aproximada</label>
-          <input value={f.eslora} onChange={(e) => set('eslora', e.target.value)} placeholder="Ej. 6 m (opcional)" /></div>
-        <div className="field"><label>Capacidad aproximada</label>
-          <input value={f.capacidad} onChange={(e) => set('capacidad', e.target.value)} placeholder="Ej. 8 personas (opcional)" /></div>
+        <div className="field"><label>Altura de la banda</label>
+          <input value={f.altura_banda} onChange={(e) => set('altura_banda', e.target.value)} placeholder="Ej. 60 cm" /></div>
+        <div className="field"><label>Ancho de piso</label>
+          <input value={f.ancho_piso} onChange={(e) => set('ancho_piso', e.target.value)} placeholder="Ej. 1.2 m" /></div>
       </div>
-      <div className="field"><label>Cuéntanos más sobre tu proyecto</label>
-        <textarea rows={4} value={f.mensaje} onChange={(e) => set('mensaje', e.target.value)}
-          placeholder="Detalles, distribución, equipamiento, zona de navegación…" /></div>
+      <div className="row2">
+        <div className="field"><label>Capacidad de carga</label>
+          <input value={f.capacidad_carga} onChange={(e) => set('capacidad_carga', e.target.value)} placeholder="Ej. 800 kg / 6 personas" /></div>
+        <div className="field"><label>Cantidad de bancas</label>
+          <input value={f.cantidad_bancas} onChange={(e) => set('cantidad_bancas', e.target.value)} placeholder="Ej. 3" /></div>
+      </div>
+
+      <div className="field"><label>Comentarios adicionales</label>
+        <textarea rows={3} value={f.mensaje} onChange={(e) => set('mensaje', e.target.value)}
+          placeholder="Distribución, equipamiento, zona de navegación, motor de preferencia…" /></div>
+
       <button className="send" onClick={submit} disabled={busy || !f.nombre || !f.tel}>
         {busy ? 'Enviando…' : 'Enviar solicitud a revisión'}
       </button>
       <p className="smallprint">
-        Compártenos las características de la embarcación que necesitas y nuestro equipo te envía una
-        propuesta ajustada a tus requerimientos. Los campos con * son obligatorios.
+        Indícanos las medidas que necesitas y revisamos tu requerimiento para enviarte una propuesta.
+        Los campos con * son obligatorios.
       </p>
     </div>
   );

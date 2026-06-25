@@ -1,50 +1,54 @@
 import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
-import { CategoryCard } from '@/components/CategoryCard';
+import { ModelCard } from '@/components/ModelCard';
 import { RequestForm } from '@/components/RequestForm';
 import { FaqList } from '@/components/FaqList';
-import { Bathy, HullArt, WaveMark } from '@/components/HullArt';
-import { getCategories } from '@/lib/queries';
-import { DIFERENCIALES, BENEFICIOS_ALUMINIO, FAQS, CONTACTO } from '@/lib/seed-data';
+import { Logo } from '@/components/Logo';
+import { HullArt } from '@/components/HullArt';
+import { IconShield, IconCheck, IconGear, IconWrench, IconAnchor, IconHandshake, IconLayers } from '@/components/Icons';
+import { getModels } from '@/lib/queries';
+import { BENEFICIOS_ALUMINIO, FAQS, CONTACTO } from '@/lib/seed-data';
 
 export const revalidate = 60;
 
 export default async function HomePage() {
-  const categorias = await getCategories();
+  const modelos = await getModels();
 
   return (
     <>
       <SiteHeader />
 
       {/* HERO */}
-      <section className="hero">
-        <Bathy />
+      <section className="hero" id="inicio">
         <div className="wrap hero-in">
           <div>
             <span className="eyebrow">Aluminio naval · Villavicencio, Meta</span>
-            <h1 className="disp">Embarcaciones en aluminio naval, <em>fabricadas para durar.</em></h1>
+            <h1>Embarcaciones en aluminio naval <em>Diseñadas para navegar, construidas para durar.</em></h1>
             <p className="lede">
-              Diseñamos y fabricamos embarcaciones para quienes buscan seguridad, resistencia y
-              desempeño en ríos, lagunas y embalses. Soluciones náuticas a tu medida.
+              Fabricamos embarcaciones de alta calidad en aluminio naval, garantizando seguridad,
+              desempeño y resistencia en cada travesía. Soluciones náuticas a tu medida.
             </p>
             <div className="hero-cta">
-              <Link className="btn btn-solid" href="#productos">Ver productos</Link>
-              <Link className="btn btn-line" href="#contacto">Solicitar cotización →</Link>
+              <Link className="btn btn-solid" href="#productos">Ver modelos <span className="arr">→</span></Link>
+              <Link className="btn btn-line" href="#contacto" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.5)' }}>Cotiza ahora <span className="arr">→</span></Link>
             </div>
           </div>
           <div className="hero-art">
-            <HullArt forma="v" hex="#8A9499" />
-            <span className="cap">Render — aquí va la foto real de la embarcación</span>
+            <HullArt forma="v" hex="#AEB8C2" />
+            <span className="cap">Aquí va la foto real de la embarcación</span>
+          </div>
+        </div>
+
+        {/* franja de features */}
+        <div className="features">
+          <div className="wrap features-in">
+            <div className="feat"><IconShield /><b>Aluminio naval<br />de alta calidad</b></div>
+            <div className="feat"><IconCheck /><b>Diseño y fabricación<br />colombiana</b></div>
+            <div className="feat"><IconGear /><b>Acabados<br />premium</b></div>
+            <div className="feat"><IconWrench /><b>Servicio y soporte<br />garantizado</b></div>
           </div>
         </div>
       </section>
-
-      {/* DIFERENCIALES */}
-      <div className="creds">
-        <div className="wrap creds-strip">
-          {DIFERENCIALES.map((d) => <div className="cred-item" key={d}><span className="tick">✔</span>{d}</div>)}
-        </div>
-      </div>
 
       {/* NOSOTROS */}
       <section className="about" id="nosotros">
@@ -70,7 +74,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* POR QUÉ ALUMINIO NAVAL */}
+      {/* POR QUÉ ALUMINIO */}
       <section className="why">
         <div className="wrap why-grid">
           <div>
@@ -87,20 +91,20 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* PRODUCTOS */}
+      {/* MODELOS */}
       <section className="models" id="productos">
         <div className="wrap">
           <div className="models-head">
             <div>
-              <span className="eyebrow">Productos</span>
-              <h2 className="disp">Soluciones para cada necesidad de navegación</h2>
+              <span className="eyebrow">Embarcaciones</span>
+              <h2 className="disp">Nuestros modelos</h2>
             </div>
-            <p>Elige el tipo de embarcación y envíanos tu solicitud. Trabajamos modelos estándar y personalizados.</p>
+            <p>Elige tu modelo, define las características y envíanos tu solicitud. Trabajamos modelos estándar y personalizados.</p>
           </div>
-          <div className="grid-models">
-            {categorias.map((c) => <CategoryCard key={c.id} c={c} />)}
+          <div className="grid-models grid-3">
+            {modelos.map((m) => <ModelCard key={m.id} m={m} />)}
           </div>
-          <p className="note">Los renders son ilustraciones de referencia. En el sitio van las fotografías reales y el visor 360° de cada embarcación.</p>
+          <p className="note">Los renders son ilustraciones de referencia. Las fotos reales y el visor 360° se cargan desde el panel de administración.</p>
         </div>
       </section>
 
@@ -121,14 +125,13 @@ export default async function HomePage() {
             <p>
               Ser una empresa reconocida en Colombia por transformar el aluminio naval en
               embarcaciones que inspiren confianza, seguridad y orgullo. Queremos que cada embarcación
-              Alutreck sea sinónimo de excelencia, respaldo y durabilidad, acompañando a familias,
-              pescadores, emprendedores y trabajadores en sus mejores historias sobre el agua.
+              Alutreck sea sinónimo de excelencia, respaldo y durabilidad.
             </p>
           </div>
         </div>
       </section>
 
-      {/* PREGUNTAS FRECUENTES */}
+      {/* FAQ */}
       <section className="faqs" id="preguntas">
         <div className="wrap faqs-grid">
           <div className="faqs-head">
@@ -139,15 +142,15 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* CONTACTO + SOLICITUD */}
+      {/* CONTACTO */}
       <section className="contact" id="contacto">
         <div className="wrap contact-grid">
           <div>
             <span className="eyebrow">Contacto</span>
             <h2 className="disp">Hablemos de tu próximo proyecto</h2>
             <p className="contact-lede">
-              Estamos listos para asesorarte y ayudarte a encontrar la embarcación ideal para tus
-              necesidades. Compártenos las características y te enviamos una propuesta ajustada.
+              Estamos listos para asesorarte y ayudarte a encontrar la embarcación ideal. Compártenos
+              las características y te enviamos una propuesta ajustada.
             </p>
             <div className="contact-data">
               <div className="cd"><span className="cd-k">Ubicación</span><span className="cd-v">{CONTACTO.ciudad}</span></div>
@@ -155,16 +158,24 @@ export default async function HomePage() {
               <div className="cd"><span className="cd-k">Correo electrónico</span><a className="cd-v link" href={`mailto:${CONTACTO.email}`}>{CONTACTO.email}</a></div>
             </div>
           </div>
-          <div>
-            <RequestForm />
-          </div>
+          <div><RequestForm /></div>
         </div>
       </section>
 
+      {/* FOOTER */}
       <footer className="site-footer">
+        <div className="foot-features">
+          <div className="wrap foot-features-in">
+            <div className="ffeat"><IconShield />Seguridad en cada travesía</div>
+            <div className="ffeat"><IconLayers />Aluminio naval de alta calidad</div>
+            <div className="ffeat"><IconGear />Ingeniería y tecnología</div>
+            <div className="ffeat"><IconAnchor />Acabados premium</div>
+            <div className="ffeat"><IconHandshake />Compromiso con clientes</div>
+          </div>
+        </div>
         <div className="wrap foot">
-          <div><span className="logo" style={{ fontSize: 18 }}><WaveMark /> Alutreck SAS</span></div>
-          <div>Embarcaciones en aluminio naval · Villavicencio, Meta · Envíos a toda Colombia</div>
+          <Logo light />
+          <div className="small">Embarcaciones en aluminio naval · Villavicencio, Meta · Envíos a toda Colombia</div>
         </div>
       </footer>
     </>

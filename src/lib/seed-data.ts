@@ -1,50 +1,32 @@
-import type { ProductCategory, Faq } from './types';
+import type { BoatModel, Faq } from './types';
 
-// Contenido real de Alutreck SAS (del documento de la empresa).
-// Sirve de respaldo cuando aún no hay Supabase conectado.
+// 3 modelos de Alutreck. Las descripciones son un punto de partida editable
+// desde el panel admin (ajústalas con el texto definitivo de cada bote).
 
-export const CATEGORIES: ProductCategory[] = [
+export const MODELS: BoatModel[] = [
   {
-    id: '1', slug: 'botes-de-pesca', nombre: 'Botes de pesca', forma: 'v', hex: '#8A9499',
-    resumen: 'Estabilidad, comodidad y seguridad para largas jornadas de pesca recreativa o deportiva.',
+    id: '1', slug: 'arawana', nombre: 'Arawana', forma: 'v', hex: '#8A9499',
+    resumen: 'Ágil y estable, pensada para pesca y recreación en río.',
     descripcion:
-      'Embarcaciones en aluminio naval diseñadas para la pesca recreativa y deportiva. Buscan estabilidad en el agua, espacio de trabajo a bordo y una navegación segura durante jornadas extensas en ríos, lagunas y embalses.',
-    usos: ['Pesca recreativa', 'Pesca deportiva', 'Salidas de jornada completa'],
+      'La Arawana es una embarcación en aluminio naval ágil y estable, ideal para pesca y recreación en ríos, lagunas y embalses. Casco diseñado para buena maniobrabilidad y un andar seguro. (Descripción de referencia: ajústala en el panel admin con el texto definitivo.)',
+    usos: ['Pesca', 'Recreación', 'Navegación en río'],
+    imagenes: [], frames360: [],
   },
   {
-    id: '2', slug: 'embarcaciones-recreativas', nombre: 'Embarcaciones recreativas', forma: 'v', hex: '#7E8A90',
-    resumen: 'Ideales para paseos familiares, turismo y actividades de entretenimiento en el agua.',
+    id: '2', slug: 'semichata', nombre: 'Semichata', forma: 'v', hex: '#7A858B',
+    resumen: 'Equilibrio entre capacidad de carga y navegabilidad.',
     descripcion:
-      'Pensadas para el disfrute: paseos en familia, turismo y actividades de entretenimiento. Combinan la durabilidad del aluminio naval con una distribución cómoda para acompañantes.',
-    usos: ['Paseos familiares', 'Turismo', 'Recreación'],
+      'La Semichata combina capacidad de carga con buena navegabilidad: una opción intermedia para trabajo y transporte donde se necesita mover carga sin sacrificar el desempeño. (Descripción de referencia: ajústala en el panel admin.)',
+    usos: ['Trabajo', 'Transporte', 'Carga media'],
+    imagenes: [], frames360: [],
   },
   {
-    id: '3', slug: 'embarcaciones-de-trabajo', nombre: 'Embarcaciones para trabajo', forma: 'v', hex: '#6F7B82',
-    resumen: 'Modelos robustos, reforzados y funcionales para operaciones comerciales e institucionales.',
+    id: '3', slug: 'chata', nombre: 'Chata', forma: 'pontoon', hex: '#6F7B82',
+    resumen: 'Fondo plano, máxima capacidad de carga y estabilidad.',
     descripcion:
-      'Construcción reforzada para operación comercial, institucional y de transporte. Priorizan resistencia estructural, bajo mantenimiento y funcionalidad en condiciones de uso exigente.',
-    usos: ['Operación comercial', 'Uso institucional', 'Transporte de carga'],
-  },
-  {
-    id: '4', slug: 'transporte-fluvial', nombre: 'Transporte fluvial', forma: 'pontoon', hex: '#7A858B',
-    resumen: 'Diseñadas para movilizar personas y carga con seguridad y eficiencia.',
-    descripcion:
-      'Embarcaciones orientadas a movilizar pasajeros y carga por vías fluviales, con foco en seguridad, capacidad y eficiencia en el desplazamiento.',
-    usos: ['Transporte de pasajeros', 'Movilización de carga', 'Conexión fluvial'],
-  },
-  {
-    id: '5', slug: 'disenos-personalizados', nombre: 'Diseños personalizados', forma: 'v', hex: '#8A9499',
-    resumen: 'Proyectos especiales adaptados a los requerimientos específicos de cada cliente.',
-    descripcion:
-      'Desarrollamos proyectos a la medida: adaptamos dimensiones, distribución, capacidad y equipamiento según lo que necesitas. Cuéntanos el uso previsto y nuestro equipo propone la embarcación adecuada.',
-    usos: ['Dimensiones a medida', 'Distribución personalizada', 'Equipamiento específico'],
-  },
-  {
-    id: '6', slug: 'accesorios-equipamiento', nombre: 'Accesorios y equipamiento', forma: 'v', hex: '#94A0A6',
-    resumen: 'Opciones de personalización y equipamiento para mejorar funcionalidad y comodidad.',
-    descripcion:
-      'Complementos y equipamiento para tu embarcación: opciones de personalización que mejoran la funcionalidad, la comodidad y el rendimiento de cada bote.',
-    usos: ['Personalización', 'Equipamiento a bordo', 'Mejoras de comodidad'],
+      'La Chata es una embarcación de fondo plano construida para máxima capacidad de carga y estabilidad. Pensada para transporte fluvial y trabajo pesado en aguas tranquilas. (Descripción de referencia: ajústala en el panel admin.)',
+    usos: ['Transporte fluvial', 'Carga pesada', 'Trabajo'],
+    imagenes: [], frames360: [],
   },
 ];
 
@@ -73,7 +55,7 @@ export const FAQS: Faq[] = [
   { pregunta: '¿Qué capacidad de pasajeros tienen?', respuesta: 'Depende del modelo y las especificaciones de la embarcación. Nuestro equipo te asesora para elegir la opción adecuada según tus necesidades.' },
   { pregunta: '¿Puedo instalar el motor de mi preferencia?', respuesta: 'Sí. Nuestras embarcaciones pueden adaptarse para diferentes marcas y potencias de motores, según las especificaciones técnicas de cada modelo.' },
   { pregunta: '¿Qué ventajas tiene una embarcación en aluminio naval?', respuesta: 'Mayor durabilidad, menor mantenimiento, excelente resistencia a impactos y una larga vida útil.' },
-  { pregunta: '¿Cómo solicito una cotización?', respuesta: 'Puedes contactarnos por WhatsApp, llamada telefónica o correo electrónico, o enviar tu solicitud desde este sitio. Nuestro equipo te brindará asesoría personalizada.' },
+  { pregunta: '¿Cómo solicito una cotización?', respuesta: 'Elige tu modelo, define las características y envía tu solicitud desde el sitio. También puedes escribirnos por WhatsApp o correo. Nuestro equipo te brindará asesoría personalizada.' },
   { pregunta: '¿Cuánto tarda la fabricación?', respuesta: 'Varía según el modelo y las especificaciones solicitadas. Cada cotización incluye un tiempo estimado de entrega.' },
 ];
 
@@ -84,6 +66,6 @@ export const CONTACTO = {
   email: 'alutreck@gmail.com',
 };
 
-export function categoryBySlug(slug: string): ProductCategory | undefined {
-  return CATEGORIES.find((c) => c.slug === slug);
+export function modelBySlug(slug: string): BoatModel | undefined {
+  return MODELS.find((m) => m.slug === slug);
 }
