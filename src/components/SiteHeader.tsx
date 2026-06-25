@@ -9,6 +9,7 @@ export function SiteHeader() {
         <nav className="menu">
           <Link href="/#inicio">Inicio</Link>
           <Link href="/#productos">Embarcaciones</Link>
+          <Link href="/#disponibles">Entrega inmediata</Link>
           <Link href="/#nosotros">Nosotros</Link>
           <Link href="/#preguntas">Preguntas</Link>
           <Link href="/#contacto">Contacto</Link>

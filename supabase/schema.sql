@@ -108,3 +108,50 @@ create policy "publico crea solicitudes" on solicitudes
   for insert to anon with check (true);
 create policy "equipo gestiona solicitudes" on solicitudes
   for all to authenticated using (true) with check (true);
+
+-- ---------- UNIDADES (entrega inmediata: bote ya construido) ----------
+create table unidades (
+  id              uuid primary key default gen_random_uuid(),
+  modelo          text not null,            -- nombre del modelo
+  modelo_slug     text,
+  titulo          text,
+  -- specs: forma de silueta y tono para el render. Ej {"forma":"v","hex":"#8A9499"}
+  specs           jsonb not null default '{}'::jsonb,
+  -- ficha fija de esta unidad
+  eslora          text,
+  altura_espejo   text,
+  altura_banda    text,
+  ancho_piso      text,
+  capacidad_carga text,
+  cantidad_bancas text,
+  equipamiento    text,
+  estado          text not null default 'disponible'
+                  check (estado in ('disponible','reservada','vendida')),
+  orden           int not null default 0,
+  created_at      timestamptz not null default now(),
+  updated_at      timestamptz not null default now()
+);
+create index idx_unidades_estado on unidades(estado);
+create trigger trg_unidades_updated before update on unidades
+  for each row execute function set_updated_at();
+
+create table unidad_imagenes (
+  id         uuid primary key default gen_random_uuid(),
+  unidad_id  uuid not null references unidades(id) on delete cascade,
+  url        text not null,
+  orden      int not null default 0,
+  created_at timestamptz not null default now()
+);
+create index idx_unidad_imagenes on unidad_imagenes(unidad_id);
+
+alter table unidades       enable row level security;
+alter table unidad_imagenes enable row level security;
+
+create policy "lectura publica unidades" on unidades
+  for select using (estado <> 'vendida');
+create policy "equipo gestiona unidades" on unidades
+  for all to authenticated using (true) with check (true);
+create policy "lectura publica unidad imagenes" on unidad_imagenes
+  for select using (true);
+create policy "equipo gestiona unidad imagenes" on unidad_imagenes
+  for all to authenticated using (true) with check (true);

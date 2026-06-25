@@ -69,3 +69,26 @@ export const CONTACTO = {
 export function modelBySlug(slug: string): BoatModel | undefined {
   return MODELS.find((m) => m.slug === slug);
 }
+
+// Unidades de ejemplo para "Entrega inmediata".
+// En producción las gestionas desde el panel admin (tabla `unidades`).
+export const UNIDADES: import('./types').UnidadDisponible[] = [
+  {
+    id: 'u1', modelo: 'Arawana', modeloSlug: 'arawana', titulo: 'Arawana equipada para pesca',
+    estado: 'disponible', forma: 'v', hex: '#8A9499', imagenes: [],
+    eslora: '7.00 m', altura_espejo: '50 cm', altura_banda: '60 cm',
+    ancho_piso: '1.20 m', capacidad_carga: '6 personas', cantidad_bancas: '3',
+    equipamiento: 'Lista para motor fuera de borda. Incluye bancas y casco terminado.',
+  },
+  {
+    id: 'u2', modelo: 'Chata', modeloSlug: 'chata', titulo: 'Chata de carga 8 m',
+    estado: 'disponible', forma: 'pontoon', hex: '#6F7B82', imagenes: [],
+    eslora: '8.00 m', altura_espejo: '55 cm', altura_banda: '70 cm',
+    ancho_piso: '2.00 m', capacidad_carga: '1.500 kg', cantidad_bancas: '2',
+    equipamiento: 'Fondo plano reforzado para transporte de carga.',
+  },
+];
+
+export function unidadesDisponibles(): import('./types').UnidadDisponible[] {
+  return UNIDADES.filter((u) => u.estado !== 'vendida');
+}

@@ -67,3 +67,35 @@ function mapRow(m: any, imagenes: string[], frames360: string[]): BoatModel {
     frames360,
   };
 }
+
+import { unidadesDisponibles } from './seed-data';
+import type { UnidadDisponible } from './types';
+
+export async function getUnidadesDisponibles(): Promise<UnidadDisponible[]> {
+  const supabase = getServerClient();
+  if (!supabase) return unidadesDisponibles();
+  try {
+    const { data, error } = await supabase
+      .from('unidades')
+      .select('id, modelo, modelo_slug, titulo, estado, specs, eslora, altura_espejo, altura_banda, ancho_piso, capacidad_carga, cantidad_bancas, equipamiento')
+      .neq('estado', 'vendida')
+      .order('orden', { ascending: true });
+    if (error || !data || data.length === 0) return unidadesDisponibles();
+    return data.map((u: any) => ({
+      id: u.id,
+      modelo: u.modelo ?? '',
+      modeloSlug: u.modelo_slug ?? undefined,
+      titulo: u.titulo ?? undefined,
+      estado: u.estado ?? 'disponible',
+      forma: (u.specs?.forma === 'pontoon' ? 'pontoon' : 'v'),
+      hex: u.specs?.hex ?? '#8A9499',
+      imagenes: [],
+      eslora: u.eslora ?? '', altura_espejo: u.altura_espejo ?? '',
+      altura_banda: u.altura_banda ?? '', ancho_piso: u.ancho_piso ?? '',
+      capacidad_carga: u.capacidad_carga ?? '', cantidad_bancas: u.cantidad_bancas ?? '',
+      equipamiento: u.equipamiento ?? undefined,
+    }));
+  } catch {
+    return unidadesDisponibles();
+  }
+}

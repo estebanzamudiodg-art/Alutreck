@@ -1,18 +1,20 @@
 import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
 import { ModelCard } from '@/components/ModelCard';
+import { UnidadCard } from '@/components/UnidadCard';
 import { RequestForm } from '@/components/RequestForm';
 import { FaqList } from '@/components/FaqList';
 import { Logo } from '@/components/Logo';
 import { HullArt } from '@/components/HullArt';
 import { IconShield, IconCheck, IconGear, IconWrench, IconAnchor, IconHandshake, IconLayers } from '@/components/Icons';
-import { getModels } from '@/lib/queries';
+import { getModels, getUnidadesDisponibles } from '@/lib/queries';
 import { BENEFICIOS_ALUMINIO, FAQS, CONTACTO } from '@/lib/seed-data';
 
 export const revalidate = 60;
 
 export default async function HomePage() {
   const modelos = await getModels();
+  const unidades = await getUnidadesDisponibles();
 
   return (
     <>
@@ -107,6 +109,24 @@ export default async function HomePage() {
           <p className="note">Los renders son ilustraciones de referencia. Las fotos reales y el visor 360° se cargan desde el panel de administración.</p>
         </div>
       </section>
+
+      {/* ENTREGA INMEDIATA */}
+      {unidades.length > 0 && (
+        <section className="disponibles" id="disponibles">
+          <div className="wrap">
+            <div className="models-head">
+              <div>
+                <span className="eyebrow">Entrega inmediata</span>
+                <h2 className="disp">Listas para entregar</h2>
+              </div>
+              <p>Embarcaciones ya construidas y disponibles. Ficha fija, sin espera de fabricación.</p>
+            </div>
+            <div className="grid-models grid-3">
+              {unidades.map((u) => <UnidadCard key={u.id} u={u} />)}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* MISIÓN / VISIÓN */}
       <section className="mv">

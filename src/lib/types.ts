@@ -27,3 +27,23 @@ export interface Faq {
   pregunta: string;
   respuesta: string;
 }
+
+// Unidad ya construida, lista para entrega inmediata. Ficha fija.
+export interface UnidadDisponible {
+  id: string;
+  modelo: string;            // nombre del modelo (Arawana, Semichata, Chata)
+  modeloSlug?: string;
+  titulo?: string;           // título corto opcional
+  estado: 'disponible' | 'reservada' | 'vendida';
+  forma: 'v' | 'pontoon';
+  hex: string;
+  imagenes: string[];
+  // ficha técnica fija de esta unidad
+  eslora: string;
+  altura_espejo: string;
+  altura_banda: string;
+  ancho_piso: string;
+  capacidad_carga: string;
+  cantidad_bancas: string;
+  equipamiento?: string;     // texto libre opcional
+}

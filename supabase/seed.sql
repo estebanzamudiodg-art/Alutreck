@@ -15,3 +15,8 @@ insert into modelos (nombre, slug, resumen, descripcion, orden, specs) values
  'Fondo plano, máxima capacidad de carga y estabilidad.',
  'La Chata es una embarcación de fondo plano construida para máxima capacidad de carga y estabilidad. Pensada para transporte fluvial y trabajo pesado en aguas tranquilas.',
  3,'{"forma":"pontoon","hex":"#6F7B82","usos":["Transporte fluvial","Carga pesada","Trabajo"]}');
+
+-- Unidades de ejemplo (entrega inmediata)
+insert into unidades (modelo, modelo_slug, titulo, specs, eslora, altura_espejo, altura_banda, ancho_piso, capacidad_carga, cantidad_bancas, equipamiento, estado, orden) values
+('Arawana','arawana','Arawana equipada para pesca','{"forma":"v","hex":"#8A9499"}','7.00 m','50 cm','60 cm','1.20 m','6 personas','3','Lista para motor fuera de borda. Incluye bancas y casco terminado.','disponible',1),
+('Chata','chata','Chata de carga 8 m','{"forma":"pontoon","hex":"#6F7B82"}','8.00 m','55 cm','70 cm','2.00 m','1.500 kg','2','Fondo plano reforzado para transporte de carga.','disponible',2);
