@@ -10,6 +10,7 @@ export interface BoatModel {
   hex: string;              // tono del render
   usos: string[];
   imagenes: string[];       // urls de la galería (Supabase Storage)
+  videos: string[];         // urls de videos (mp4)
   frames360: string[];      // urls de los frames del giro (spin real)
 }
 

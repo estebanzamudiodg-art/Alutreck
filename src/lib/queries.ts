@@ -45,14 +45,25 @@ export async function getModelBySlug(slug: string): Promise<BoatModel | undefine
       .eq('modelo_id', m.id)
       .order('frame_order', { ascending: true });
 
-    return mapRow(m, (imgs ?? []).map((i) => i.url), (frames ?? []).map((f) => f.url));
+    const { data: videos } = await supabase
+      .from('modelo_videos')
+      .select('url')
+      .eq('modelo_id', m.id)
+      .order('orden', { ascending: true });
+
+    return mapRow(
+      m,
+      (imgs ?? []).map((i) => i.url),
+      (frames ?? []).map((f) => f.url),
+      (videos ?? []).map((v) => v.url),
+    );
   } catch {
     return modelBySlug(slug);
   }
 }
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
-function mapRow(m: any, imagenes: string[], frames360: string[]): BoatModel {
+function mapRow(m: any, imagenes: string[], frames360: string[], videos: string[] = []): BoatModel {
   const specs = m.specs ?? {};
   return {
     id: m.id,
@@ -64,6 +75,7 @@ function mapRow(m: any, imagenes: string[], frames360: string[]): BoatModel {
     hex: specs.hex ?? '#8A9499',
     usos: specs.usos ?? [],
     imagenes,
+    videos,
     frames360,
   };
 }

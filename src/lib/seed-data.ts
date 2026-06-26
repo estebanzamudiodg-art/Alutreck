@@ -10,7 +10,7 @@ export const MODELS: BoatModel[] = [
     descripcion:
       'La Arawana es una embarcación en aluminio naval ágil y estable, ideal para pesca y recreación en ríos, lagunas y embalses. Casco diseñado para buena maniobrabilidad y un andar seguro. (Descripción de referencia: ajústala en el panel admin con el texto definitivo.)',
     usos: ['Pesca', 'Recreación', 'Navegación en río'],
-    imagenes: [], frames360: [],
+    imagenes: [], videos: [], frames360: [],
   },
   {
     id: '2', slug: 'semichata', nombre: 'Semichata', forma: 'v', hex: '#7A858B',
@@ -18,7 +18,7 @@ export const MODELS: BoatModel[] = [
     descripcion:
       'La Semichata combina capacidad de carga con buena navegabilidad: una opción intermedia para trabajo y transporte donde se necesita mover carga sin sacrificar el desempeño. (Descripción de referencia: ajústala en el panel admin.)',
     usos: ['Trabajo', 'Transporte', 'Carga media'],
-    imagenes: [], frames360: [],
+    imagenes: [], videos: [], frames360: [],
   },
   {
     id: '3', slug: 'chata', nombre: 'Chata', forma: 'pontoon', hex: '#6F7B82',
@@ -26,7 +26,7 @@ export const MODELS: BoatModel[] = [
     descripcion:
       'La Chata es una embarcación de fondo plano construida para máxima capacidad de carga y estabilidad. Pensada para transporte fluvial y trabajo pesado en aguas tranquilas. (Descripción de referencia: ajústala en el panel admin.)',
     usos: ['Transporte fluvial', 'Carga pesada', 'Trabajo'],
-    imagenes: [], frames360: [],
+    imagenes: [], videos: [], frames360: [],
   },
 ];
 

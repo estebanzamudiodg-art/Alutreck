@@ -35,6 +35,14 @@ export default async function ModelPage({ params }: { params: { slug: string } }
           <div className="viewer-col">
             <Boat360Viewer frames={m.frames360} forma={m.forma} hex={m.hex} />
             <Gallery imagenes={m.imagenes} nombre={m.nombre} />
+            {m.videos.length > 0 && (
+              <div className="videos">
+                {m.videos.map((src, i) => (
+                  // eslint-disable-next-line jsx-a11y/media-has-caption
+                  <video key={i} className="video" src={src} controls preload="metadata" />
+                ))}
+              </div>
+            )}
           </div>
 
           <div>
