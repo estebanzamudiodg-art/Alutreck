@@ -2,7 +2,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { SiteHeader } from '@/components/SiteHeader';
 import { Boat360Viewer } from '@/components/Boat360Viewer';
-import { Gallery } from '@/components/Gallery';
+import { MediaGallery } from '@/components/MediaGallery';
 import { RequestForm } from '@/components/RequestForm';
 import { Logo } from '@/components/Logo';
 import { getModels, getModelBySlug } from '@/lib/queries';
@@ -32,20 +32,11 @@ export default async function ModelPage({ params }: { params: { slug: string } }
         <div className="crumb"><Link href="/#productos">Modelos</Link> / <b>{m.nombre}</b></div>
 
         <div className="detail">
-          <div className="viewer-col">
+          <div className="detail-visual">
             <Boat360Viewer frames={m.frames360} forma={m.forma} hex={m.hex} />
-            <Gallery imagenes={m.imagenes} nombre={m.nombre} />
-            {m.videos.length > 0 && (
-              <div className="videos">
-                {m.videos.map((src, i) => (
-                  // eslint-disable-next-line jsx-a11y/media-has-caption
-                  <video key={i} className="video" src={src} controls preload="metadata" />
-                ))}
-              </div>
-            )}
           </div>
 
-          <div>
+          <div className="detail-info">
             <h1 className="d-title">{m.nombre}</h1>
             <p className="d-long">{m.descripcion}</p>
 
@@ -65,6 +56,13 @@ export default async function ModelPage({ params }: { params: { slug: string } }
             </div>
           </div>
         </div>
+
+        {(m.imagenes.length > 0 || m.videos.length > 0) && (
+          <section className="media-section">
+            <h2 className="disp media-title">Galería</h2>
+            <MediaGallery imagenes={m.imagenes} videos={m.videos} nombre={m.nombre} />
+          </section>
+        )}
 
         <section className="request-section" id="solicitar">
           <div className="request-head">
