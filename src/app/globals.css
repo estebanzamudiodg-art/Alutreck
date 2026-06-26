@@ -322,3 +322,7 @@ img,video{max-width:100%}
   .dc-actions{flex-direction:column}
   .dc-actions .btn{width:100%}
 }
+
+.hero-photo{width:100%;height:100%;object-fit:cover;display:block}
+.hero-current{margin:8px 0 14px;border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:360px}
+.hero-current img{width:100%;display:block}

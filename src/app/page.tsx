@@ -7,7 +7,7 @@ import { FaqList } from '@/components/FaqList';
 import { Logo } from '@/components/Logo';
 import { HullArt } from '@/components/HullArt';
 import { IconShield, IconCheck, IconGear, IconWrench, IconAnchor, IconHandshake, IconLayers } from '@/components/Icons';
-import { getModels, getUnidadesDisponibles } from '@/lib/queries';
+import { getModels, getUnidadesDisponibles, getSetting } from '@/lib/queries';
 import { BENEFICIOS_ALUMINIO, FAQS, CONTACTO } from '@/lib/seed-data';
 
 export const revalidate = 60;
@@ -15,6 +15,7 @@ export const revalidate = 60;
 export default async function HomePage() {
   const modelos = await getModels();
   const unidades = await getUnidadesDisponibles();
+  const heroImg = await getSetting('hero_image');
 
   return (
     <>
@@ -36,8 +37,15 @@ export default async function HomePage() {
             </div>
           </div>
           <div className="hero-art">
-            <HullArt forma="v" hex="#AEB8C2" />
-            <span className="cap">Aquí va la foto real de la embarcación</span>
+            {heroImg ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="hero-photo" src={heroImg} alt="Embarcación Alutreck" />
+            ) : (
+              <>
+                <HullArt forma="v" hex="#AEB8C2" />
+                <span className="cap">Aquí va la foto real de la embarcación</span>
+              </>
+            )}
           </div>
         </div>
 

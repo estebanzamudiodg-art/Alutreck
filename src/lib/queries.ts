@@ -15,9 +15,32 @@ export async function getModels(): Promise<BoatModel[]> {
       .eq('activo', true)
       .order('orden', { ascending: true });
     if (error || !data || data.length === 0) return MODELS;
-    return data.map((m) => mapRow(m, [], []));
+
+    // portada de cada modelo = su primera imagen
+    const ids = data.map((d: any) => d.id);
+    const { data: imgs } = await supabase
+      .from('modelo_imagenes')
+      .select('modelo_id, url, orden')
+      .in('modelo_id', ids)
+      .order('orden', { ascending: true });
+    const cover: Record<string, string> = {};
+    (imgs ?? []).forEach((im: any) => { if (cover[im.modelo_id] === undefined) cover[im.modelo_id] = im.url; });
+
+    return data.map((m: any) => mapRow(m, cover[m.id] ? [cover[m.id]] : [], []));
   } catch {
     return MODELS;
+  }
+}
+
+/** Lee un valor de configuración del sitio (tabla config). */
+export async function getSetting(key: string): Promise<string | null> {
+  const supabase = getServerClient();
+  if (!supabase) return null;
+  try {
+    const { data } = await supabase.from('config').select('value').eq('key', key).single();
+    return data?.value ?? null;
+  } catch {
+    return null;
   }
 }
 

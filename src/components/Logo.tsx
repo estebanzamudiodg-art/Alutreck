@@ -7,8 +7,8 @@
 //
 // Mientras tanto se muestra el wordmark estilizado, fiel a la guía de marca.
 
-const USAR_IMAGEN = true;
-const RUTA_LOGO = '/logo.svg';
+const USAR_IMAGEN = false;
+const RUTA_LOGO = '/logo.png';
 
 export function Logo({ light = false }: { light?: boolean }) {
   if (USAR_IMAGEN) {
