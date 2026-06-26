@@ -326,3 +326,11 @@ img,video{max-width:100%}
 .hero-photo{width:100%;height:100%;object-fit:cover;display:block}
 .hero-current{margin:8px 0 14px;border:1px solid var(--line);border-radius:10px;overflow:hidden;max-width:360px}
 .hero-current img{width:100%;display:block}
+
+/* ====== lista de unidades en admin ====== */
+.ulist{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.urow{display:flex;align-items:center;gap:14px;background:var(--paper);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.urow .ubadge{position:static}
+.urow-t{flex:1;font-weight:700;color:var(--navy)}
+.urow-t small{display:block;font-weight:500;color:var(--ink-soft);font-size:12px;text-transform:none}
+.ubadge.vendida{background:var(--gray)}

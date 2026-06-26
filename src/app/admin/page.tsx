@@ -2,12 +2,13 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { getBrowserClient } from '@/lib/supabase/client';
+import { UnidadesPanel } from '@/components/UnidadesPanel';
 
 const BUCKET = 'media';
 
 type Modelo = { id: string; slug: string; nombre: string };
 type MediaItem = { id: string; url: string };
-type Mode = 'none' | 'inicio' | 'modelo';
+type Mode = 'none' | 'inicio' | 'modelo' | 'unidades';
 
 export default function AdminPage() {
   const supabase = getBrowserClient();
@@ -168,6 +169,7 @@ export default function AdminPage() {
         <aside className="admin-side">
           <div className="side-title">Página de inicio</div>
           <button className={`side-item ${mode === 'inicio' ? 'on' : ''}`} onClick={pickInicio}>🏠 Portada de inicio</button>
+          <button className={`side-item ${mode === 'unidades' ? 'on' : ''}`} onClick={() => { setMode('unidades'); setSel(null); }}>🚤 Entrega inmediata</button>
           <div className="side-title">Modelos</div>
           {modelos.map((m) => (
             <button key={m.id} className={`side-item ${mode === 'modelo' && sel?.id === m.id ? 'on' : ''}`} onClick={() => pickModelo(m)}>{m.nombre}</button>
@@ -178,6 +180,8 @@ export default function AdminPage() {
           {busy && <div className="busy">{busy}</div>}
 
           {mode === 'none' && <p className="hint-pick">Elige una opción de la izquierda.</p>}
+
+          {mode === 'unidades' && <UnidadesPanel supabase={supabase} />}
 
           {mode === 'inicio' && (
             <>

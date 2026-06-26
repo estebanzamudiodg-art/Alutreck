@@ -116,6 +116,17 @@ export async function getUnidadesDisponibles(): Promise<UnidadDisponible[]> {
       .neq('estado', 'vendida')
       .order('orden', { ascending: true });
     if (error || !data || data.length === 0) return unidadesDisponibles();
+
+    // portada de cada unidad = su primera imagen
+    const ids = data.map((u: any) => u.id);
+    const { data: imgs } = await supabase
+      .from('unidad_imagenes')
+      .select('unidad_id, url, orden')
+      .in('unidad_id', ids)
+      .order('orden', { ascending: true });
+    const cover: Record<string, string> = {};
+    (imgs ?? []).forEach((im: any) => { if (cover[im.unidad_id] === undefined) cover[im.unidad_id] = im.url; });
+
     return data.map((u: any) => ({
       id: u.id,
       modelo: u.modelo ?? '',
@@ -124,7 +135,7 @@ export async function getUnidadesDisponibles(): Promise<UnidadDisponible[]> {
       estado: u.estado ?? 'disponible',
       forma: (u.specs?.forma === 'pontoon' ? 'pontoon' : 'v'),
       hex: u.specs?.hex ?? '#8A9499',
-      imagenes: [],
+      imagenes: cover[u.id] ? [cover[u.id]] : [],
       eslora: u.eslora ?? '', altura_espejo: u.altura_espejo ?? '',
       altura_banda: u.altura_banda ?? '', ancho_piso: u.ancho_piso ?? '',
       capacidad_carga: u.capacidad_carga ?? '', cantidad_bancas: u.cantidad_bancas ?? '',
