@@ -353,3 +353,12 @@ img,video{max-width:100%}
 .franja-in .eyebrow.light{color:#8FC0F0}
 .franja-in h2{color:#fff;font-size:34px;font-weight:800;text-transform:uppercase;letter-spacing:.01em;margin:0;max-width:640px}
 @media(max-width:600px){.franja-in{padding:44px 0}.franja-in h2{font-size:26px}}
+
+/* ====== imagen en preguntas frecuentes ====== */
+.faqs-media{margin-top:22px;max-width:420px}
+.faqs-media .sec-img{aspect-ratio:4/3}
+.faqs-media .sec-ph{aspect-ratio:4/3}
+
+/* ====== acceso administrador (footer) ====== */
+.admin-link{color:rgba(255,255,255,.6);font-size:12px;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:6px;transition:all .2s;white-space:nowrap}
+.admin-link:hover{color:#fff;border-color:rgba(255,255,255,.55)}

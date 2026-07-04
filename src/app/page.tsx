@@ -16,10 +16,11 @@ export const revalidate = 60;
 export default async function HomePage() {
   const modelos = await getModels();
   const unidades = await getUnidadesDisponibles();
-  const imgs = await getSettings(['hero_image', 'nosotros_image', 'material_image', 'franja_image']);
+  const imgs = await getSettings(['hero_image', 'nosotros_image', 'material_image', 'faqs_image', 'franja_image']);
   const heroImg = imgs['hero_image'] ?? null;
   const nosotrosImg = imgs['nosotros_image'] ?? null;
   const materialImg = imgs['material_image'] ?? null;
+  const faqsImg = imgs['faqs_image'] ?? null;
   const franjaImg = imgs['franja_image'] ?? null;
 
   return (
@@ -186,6 +187,9 @@ export default async function HomePage() {
           <div className="faqs-head">
             <span className="eyebrow">Preguntas frecuentes</span>
             <h2 className="disp">Lo que suelen preguntarnos</h2>
+            <div className="faqs-media">
+              <SectionImage src={faqsImg} alt="Alutreck SAS" />
+            </div>
           </div>
           <FaqList faqs={FAQS} />
         </div>
@@ -225,6 +229,7 @@ export default async function HomePage() {
         <div className="wrap foot">
           <Logo light />
           <div className="small">Embarcaciones en aluminio naval · Villavicencio, Meta · Envíos a toda Colombia</div>
+          <Link className="admin-link" href="/admin">Acceso administrador</Link>
         </div>
       </footer>
     </>

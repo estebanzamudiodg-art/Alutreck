@@ -15,6 +15,7 @@ const SLOTS = [
   { key: 'hero_image', label: 'Portada principal (hero)', help: 'Imagen grande de la parte superior.', maxW: 1920 },
   { key: 'nosotros_image', label: 'Sección "Nosotros"', help: 'Foto junto al texto de presentación.', maxW: 1600 },
   { key: 'material_image', label: 'Sección "¿Por qué aluminio naval?"', help: 'Foto de detalle del material o del casco.', maxW: 1600 },
+  { key: 'faqs_image', label: 'Sección "Preguntas frecuentes"', help: 'Foto junto al bloque de preguntas.', maxW: 1600 },
   { key: 'franja_image', label: 'Franja ancha', help: 'Imagen de fondo a lo ancho (un bote navegando, el río).', maxW: 1920 },
 ];
 
