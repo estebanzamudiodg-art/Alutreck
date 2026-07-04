@@ -6,8 +6,9 @@ import { RequestForm } from '@/components/RequestForm';
 import { FaqList } from '@/components/FaqList';
 import { Logo } from '@/components/Logo';
 import { HullArt } from '@/components/HullArt';
+import { SectionImage } from '@/components/SectionImage';
 import { IconShield, IconCheck, IconGear, IconWrench, IconAnchor, IconHandshake, IconLayers } from '@/components/Icons';
-import { getModels, getUnidadesDisponibles, getSetting } from '@/lib/queries';
+import { getModels, getUnidadesDisponibles, getSettings } from '@/lib/queries';
 import { BENEFICIOS_ALUMINIO, FAQS, CONTACTO } from '@/lib/seed-data';
 
 export const revalidate = 60;
@@ -15,7 +16,11 @@ export const revalidate = 60;
 export default async function HomePage() {
   const modelos = await getModels();
   const unidades = await getUnidadesDisponibles();
-  const heroImg = await getSetting('hero_image');
+  const imgs = await getSettings(['hero_image', 'nosotros_image', 'material_image', 'franja_image']);
+  const heroImg = imgs['hero_image'] ?? null;
+  const nosotrosImg = imgs['nosotros_image'] ?? null;
+  const materialImg = imgs['material_image'] ?? null;
+  const franjaImg = imgs['franja_image'] ?? null;
 
   return (
     <>
@@ -39,7 +44,7 @@ export default async function HomePage() {
           <div className="hero-art">
             {heroImg ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img className="hero-photo" src={heroImg} alt="Embarcación Alutreck" />
+              <img className="hero-photo" src={heroImg} alt="Embarcación Alutreck" width="1600" height="1200" fetchPriority="high" />
             ) : (
               <>
                 <HullArt forma="v" hex="#AEB8C2" />
@@ -63,11 +68,9 @@ export default async function HomePage() {
       {/* NOSOTROS */}
       <section className="about" id="nosotros">
         <div className="wrap about-grid">
-          <div>
+          <div className="about-text">
             <span className="eyebrow">Nosotros</span>
             <h2 className="disp">Pasión por fabricar embarcaciones confiables</h2>
-          </div>
-          <div>
             <p>
               En Alutreck SAS creemos que una embarcación es mucho más que un medio de transporte: es
               una herramienta de trabajo, una inversión y una fuente de experiencias. Por eso nos
@@ -81,6 +84,21 @@ export default async function HomePage() {
               de nuestro taller refleja nuestro compromiso con la calidad y la atención al detalle.
             </p>
           </div>
+          <div className="about-media">
+            <SectionImage src={nosotrosImg} alt="Taller Alutreck" />
+          </div>
+        </div>
+      </section>
+
+      {/* FRANJA ANCHA */}
+      <section
+        className={`franja ${franjaImg ? 'has-img' : ''}`}
+        style={franjaImg ? { backgroundImage: `linear-gradient(rgba(13,31,52,.55),rgba(13,31,52,.55)), url(${franjaImg})` } : undefined}
+      >
+        <div className="wrap franja-in">
+          <span className="eyebrow light">Alutreck SAS</span>
+          <h2>Construidas para durar en cada travesía</h2>
+          <Link className="btn btn-solid" href="#productos">Ver modelos <span className="arr">→</span></Link>
         </div>
       </section>
 
@@ -94,6 +112,9 @@ export default async function HomePage() {
               Es uno de los materiales más valorados en la industria marítima. Estas son sus ventajas
               frente a otras opciones.
             </p>
+            <div className="why-media">
+              <SectionImage src={materialImg} alt="Aluminio naval Alutreck" />
+            </div>
           </div>
           <ul className="benefits">
             {BENEFICIOS_ALUMINIO.map((b) => <li key={b}><span className="bdot" />{b}</li>)}

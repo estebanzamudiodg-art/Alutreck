@@ -21,7 +21,7 @@ export function UnidadCard({ u }: { u: UnidadDisponible }) {
       <div className="uph">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="ph-img" src={cover} alt={u.modelo} />
+          <img className="ph-img" src={cover} alt={u.modelo} width="1600" height="1000" loading="lazy" decoding="async" />
         ) : (
           <HullArt forma={u.forma} hex={u.hex} />
         )}

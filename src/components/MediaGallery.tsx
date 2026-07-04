@@ -20,7 +20,7 @@ export function MediaGallery({
           {imagenes.map((src, i) => (
             <button key={i} className="mphoto" onClick={() => setLb(i)} aria-label={`Ampliar foto ${i + 1}`}>
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={src} alt={`${nombre} ${i + 1}`} loading="lazy" />
+              <img src={src} alt={`${nombre} ${i + 1}`} width="1200" height="900" loading="lazy" />
             </button>
           ))}
         </div>

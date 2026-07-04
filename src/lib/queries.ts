@@ -44,6 +44,20 @@ export async function getSetting(key: string): Promise<string | null> {
   }
 }
 
+/** Lee varios valores de config en una sola consulta. */
+export async function getSettings(keys: string[]): Promise<Record<string, string>> {
+  const supabase = getServerClient();
+  if (!supabase) return {};
+  try {
+    const { data } = await supabase.from('config').select('key, value').in('key', keys);
+    const map: Record<string, string> = {};
+    (data ?? []).forEach((r: any) => { if (r.value) map[r.key] = r.value; });
+    return map;
+  } catch {
+    return {};
+  }
+}
+
 export async function getModelBySlug(slug: string): Promise<BoatModel | undefined> {
   const supabase = getServerClient();
   if (!supabase) return modelBySlug(slug);
@@ -56,23 +70,12 @@ export async function getModelBySlug(slug: string): Promise<BoatModel | undefine
       .single();
     if (error || !m) return modelBySlug(slug);
 
-    const { data: imgs } = await supabase
-      .from('modelo_imagenes')
-      .select('url')
-      .eq('modelo_id', m.id)
-      .order('orden', { ascending: true });
-
-    const { data: frames } = await supabase
-      .from('modelo_360_frames')
-      .select('url')
-      .eq('modelo_id', m.id)
-      .order('frame_order', { ascending: true });
-
-    const { data: videos } = await supabase
-      .from('modelo_videos')
-      .select('url')
-      .eq('modelo_id', m.id)
-      .order('orden', { ascending: true });
+    const [imgsRes, framesRes, videosRes] = await Promise.all([
+      supabase.from('modelo_imagenes').select('url').eq('modelo_id', m.id).order('orden', { ascending: true }),
+      supabase.from('modelo_360_frames').select('url').eq('modelo_id', m.id).order('frame_order', { ascending: true }),
+      supabase.from('modelo_videos').select('url').eq('modelo_id', m.id).order('orden', { ascending: true }),
+    ]);
+    const imgs = imgsRes.data, frames = framesRes.data, videos = videosRes.data;
 
     return mapRow(
       m,

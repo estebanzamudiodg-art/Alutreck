@@ -9,7 +9,7 @@ export function ModelCard({ m }: { m: BoatModel }) {
       <div className="ph">
         {cover ? (
           // eslint-disable-next-line @next/next/no-img-element
-          <img className="ph-img" src={cover} alt={m.nombre} />
+          <img className="ph-img" src={cover} alt={m.nombre} width="1600" height="1000" loading="lazy" decoding="async" />
         ) : (
           <HullArt forma={m.forma} hex={m.hex} />
         )}

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from 'react';
 import { getBrowserClient } from '@/lib/supabase/client';
+import { resizeImage } from '@/lib/resize-image';
 import { UnidadesPanel } from '@/components/UnidadesPanel';
 
 const BUCKET = 'media';
@@ -9,6 +10,13 @@ const BUCKET = 'media';
 type Modelo = { id: string; slug: string; nombre: string };
 type MediaItem = { id: string; url: string };
 type Mode = 'none' | 'inicio' | 'modelo' | 'unidades';
+
+const SLOTS = [
+  { key: 'hero_image', label: 'Portada principal (hero)', help: 'Imagen grande de la parte superior.', maxW: 1920 },
+  { key: 'nosotros_image', label: 'Sección "Nosotros"', help: 'Foto junto al texto de presentación.', maxW: 1600 },
+  { key: 'material_image', label: 'Sección "¿Por qué aluminio naval?"', help: 'Foto de detalle del material o del casco.', maxW: 1600 },
+  { key: 'franja_image', label: 'Franja ancha', help: 'Imagen de fondo a lo ancho (un bote navegando, el río).', maxW: 1920 },
+];
 
 export default function AdminPage() {
   const supabase = getBrowserClient();
@@ -25,7 +33,7 @@ export default function AdminPage() {
   const [fotos, setFotos] = useState<MediaItem[]>([]);
   const [videos, setVideos] = useState<MediaItem[]>([]);
   const [frames, setFrames] = useState<MediaItem[]>([]);
-  const [heroUrl, setHeroUrl] = useState<string | null>(null);
+  const [siteImgs, setSiteImgs] = useState<Record<string, string | null>>({});
   const [busy, setBusy] = useState('');
 
   useEffect(() => {
@@ -58,14 +66,18 @@ export default function AdminPage() {
     setFotos(i.data ?? []); setVideos(v.data ?? []); setFrames(f.data ?? []);
   }, [supabase]);
 
-  const loadHero = useCallback(async () => {
+  const loadInicio = useCallback(async () => {
     if (!supabase) return;
-    const { data } = await supabase.from('config').select('value').eq('key', 'hero_image').single();
-    setHeroUrl(data?.value ?? null);
+    const keys = SLOTS.map((s) => s.key);
+    const { data } = await supabase.from('config').select('key, value').in('key', keys);
+    const map: Record<string, string | null> = {};
+    keys.forEach((k) => { map[k] = null; });
+    (data ?? []).forEach((r: any) => { map[r.key] = r.value ?? null; });
+    setSiteImgs(map);
   }, [supabase]);
 
   function pickModelo(m: Modelo) { setMode('modelo'); setSel(m); loadMedia(m); }
-  function pickInicio() { setMode('inicio'); setSel(null); loadHero(); }
+  function pickInicio() { setMode('inicio'); setSel(null); loadInicio(); }
 
   async function login() {
     if (!supabase) return;
@@ -88,10 +100,13 @@ export default function AdminPage() {
     try {
       const list = Array.from(files);
       for (let k = 0; k < list.length; k++) {
-        const file = list[k];
+        let file = list[k];
+        // comprime imágenes (fotos y frames); los videos van tal cual
+        if (kind === 'foto') file = await resizeImage(file, { maxW: 1600 });
+        else if (kind === 'frame') file = await resizeImage(file, { maxW: 1280 });
         const ext = file.name.split('.').pop() ?? 'bin';
         const path = `${sel.slug}/${carpeta}/${Date.now()}-${k}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
-        const up = await supabase.storage.from(BUCKET).upload(path, file);
+        const up = await supabase.storage.from(BUCKET).upload(path, file, { cacheControl: '31536000', upsert: true });
         if (up.error) { setBusy('Error al subir: ' + up.error.message); return; }
         const url = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
         if (kind === 'foto') await supabase.from('modelo_imagenes').insert({ modelo_id: sel.id, url, orden: fotos.length + k });
@@ -111,26 +126,27 @@ export default function AdminPage() {
     loadMedia(sel);
   }
 
-  async function uploadHero(files: FileList | null) {
+  async function uploadSlot(key: string, maxW: number, files: FileList | null) {
     if (!supabase || !files || files.length === 0) return;
-    setBusy('Subiendo portada…');
+    setBusy('Subiendo imagen…');
     try {
-      const file = files[0];
-      const ext = file.name.split('.').pop() ?? 'jpg';
-      const path = `inicio/hero-${Date.now()}.${ext}`;
-      const up = await supabase.storage.from(BUCKET).upload(path, file);
+      const file = await resizeImage(files[0], { maxW, quality: 0.85 });
+      const ext = file.name.split('.').pop() ?? 'webp';
+      const path = `inicio/${key}-${Date.now()}.${ext}`;
+      const up = await supabase.storage.from(BUCKET).upload(path, file, { cacheControl: '31536000', upsert: true });
       if (up.error) { setBusy('Error al subir: ' + up.error.message); return; }
       const url = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
-      await supabase.from('config').upsert({ key: 'hero_image', value: url });
-      setBusy(''); setHeroUrl(url);
+      await supabase.from('config').upsert({ key, value: url });
+      setBusy(''); setSiteImgs((m) => ({ ...m, [key]: url }));
     } catch (e: any) { setBusy('Error: ' + (e?.message ?? 'desconocido')); }
   }
 
-  async function removeHero() {
+  async function removeSlot(key: string) {
     if (!supabase) return;
-    if (heroUrl) { const p = storagePath(heroUrl); if (p) await supabase.storage.from(BUCKET).remove([p]); }
-    await supabase.from('config').delete().eq('key', 'hero_image');
-    setHeroUrl(null);
+    const cur = siteImgs[key];
+    if (cur) { const p = storagePath(cur); if (p) await supabase.storage.from(BUCKET).remove([p]); }
+    await supabase.from('config').delete().eq('key', key);
+    setSiteImgs((m) => ({ ...m, [key]: null }));
   }
 
   if (!ready) return <div className="admin-wrap"><p>Cargando…</p></div>;
@@ -168,7 +184,7 @@ export default function AdminPage() {
       <div className="admin-grid">
         <aside className="admin-side">
           <div className="side-title">Página de inicio</div>
-          <button className={`side-item ${mode === 'inicio' ? 'on' : ''}`} onClick={pickInicio}>🏠 Portada de inicio</button>
+          <button className={`side-item ${mode === 'inicio' ? 'on' : ''}`} onClick={pickInicio}>🏠 Imágenes del inicio</button>
           <button className={`side-item ${mode === 'unidades' ? 'on' : ''}`} onClick={() => { setMode('unidades'); setSel(null); }}>🚤 Entrega inmediata</button>
           <div className="side-title">Modelos</div>
           {modelos.map((m) => (
@@ -185,21 +201,27 @@ export default function AdminPage() {
 
           {mode === 'inicio' && (
             <>
-              <h2>Portada de inicio</h2>
-              <p className="hint-pick">Esta imagen aparece grande en la parte superior de la página principal.</p>
-              {heroUrl ? (
-                <>
-                  <div className="hero-current">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={heroUrl} alt="Portada actual" /></div>
-                  <div className="dc-actions">
-                    <label className="upload-btn">Cambiar imagen
-                      <input type="file" accept="image/*" hidden onChange={(e) => { uploadHero(e.target.files); e.currentTarget.value = ''; }} /></label>
-                    <button className="btn btn-line" onClick={removeHero}>Quitar</button>
+              <h2>Imágenes del inicio</h2>
+              <p className="hint-pick">Estas imágenes aparecen en distintas partes de la página principal. Sube o cambia cada una cuando quieras.</p>
+              {SLOTS.map((s) => (
+                <section className="mblock" key={s.key}>
+                  <div className="mblock-h">
+                    <div>
+                      <h3>{s.label}</h3>
+                      <p className="mempty" style={{ margin: '2px 0 0' }}>{s.help}</p>
+                    </div>
+                    <label className="upload-btn">{siteImgs[s.key] ? 'Cambiar' : '+ Subir'}
+                      <input type="file" accept="image/*" hidden
+                        onChange={(e) => { uploadSlot(s.key, s.maxW, e.target.files); e.currentTarget.value = ''; }} /></label>
                   </div>
-                </>
-              ) : (
-                <label className="upload-btn">+ Subir portada
-                  <input type="file" accept="image/*" hidden onChange={(e) => { uploadHero(e.target.files); e.currentTarget.value = ''; }} /></label>
-              )}
+                  {siteImgs[s.key] && (
+                    <>
+                      <div className="hero-current">{/* eslint-disable-next-line @next/next/no-img-element */}<img src={siteImgs[s.key] as string} alt={s.label} /></div>
+                      <button className="btn btn-line" onClick={() => removeSlot(s.key)}>Quitar</button>
+                    </>
+                  )}
+                </section>
+              ))}
             </>
           )}
 

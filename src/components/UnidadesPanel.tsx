@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { resizeImage } from '@/lib/resize-image';
 
 const BUCKET = 'media';
 const MODELOS = ['Arawana', 'Semichata', 'Chata'];
@@ -91,9 +92,10 @@ export function UnidadesPanel({ supabase }: { supabase: any }) {
     setBusy('Subiendo…');
     const arr = Array.from(files);
     for (let k = 0; k < arr.length; k++) {
-      const file = arr[k]; const ext = file.name.split('.').pop() ?? 'jpg';
+      const file = await resizeImage(arr[k], { maxW: 1600 });
+      const ext = file.name.split('.').pop() ?? 'webp';
       const path = `unidades/${sel.id}/${Date.now()}-${k}.${ext}`;
-      const up = await supabase.storage.from(BUCKET).upload(path, file);
+      const up = await supabase.storage.from(BUCKET).upload(path, file, { cacheControl: '31536000', upsert: true });
       if (up.error) { setBusy('Error: ' + up.error.message); return; }
       const url = supabase.storage.from(BUCKET).getPublicUrl(path).data.publicUrl;
       await supabase.from('unidad_imagenes').insert({ unidad_id: sel.id, url, orden: fotos.length + k });
