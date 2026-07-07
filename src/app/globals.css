@@ -362,3 +362,22 @@ img,video{max-width:100%}
 /* ====== acceso administrador (footer) ====== */
 .admin-link{color:rgba(255,255,255,.6);font-size:12px;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:6px;transition:all .2s;white-space:nowrap}
 .admin-link:hover{color:#fff;border-color:rgba(255,255,255,.55)}
+
+/* ====== menú hamburguesa (móvil) ====== */
+.burger{display:none;flex-direction:column;justify-content:center;gap:5px;width:44px;height:44px;background:none;border:0;cursor:pointer;padding:10px}
+.burger span{display:block;height:2.5px;width:100%;background:#fff;border-radius:2px;transition:transform .25s,opacity .2s}
+.burger.open span:nth-child(1){transform:translateY(7.5px) rotate(45deg)}
+.burger.open span:nth-child(2){opacity:0}
+.burger.open span:nth-child(3){transform:translateY(-7.5px) rotate(-45deg)}
+
+.mobile-nav{position:fixed;left:0;right:0;top:72px;bottom:0;background:rgba(9,20,36,.55);opacity:0;pointer-events:none;transition:opacity .2s;z-index:29}
+.mobile-nav.show{opacity:1;pointer-events:auto}
+.mobile-nav-in{background:var(--navy);border-top:1px solid rgba(255,255,255,.08);padding:8px 20px 26px;display:flex;flex-direction:column;transform:translateY(-10px);transition:transform .22s}
+.mobile-nav.show .mobile-nav-in{transform:translateY(0)}
+.m-link{color:#E7EDF4;font-size:16px;font-weight:600;text-transform:uppercase;letter-spacing:.03em;padding:16px 4px;border-bottom:1px solid rgba(255,255,255,.08)}
+.m-cta{margin-top:20px;justify-content:center;font-size:15px;padding:15px}
+@media(min-width:881px){.mobile-nav{display:none}}
+@media(max-width:880px){
+  .burger{display:flex}
+  .cta-desktop{display:none}
+}
