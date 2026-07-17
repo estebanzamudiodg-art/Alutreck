@@ -392,3 +392,10 @@ img,video{max-width:100%}
   .burger{display:flex}
   .cta-desktop{display:none}
 }
+
+/* ====== editor de modelo / nuevo modelo (admin) ====== */
+.side-add{margin-top:6px;color:#9FE0C0;border:1px dashed rgba(255,255,255,.2)}
+.side-add.on{background:#1F6B4A;color:#fff;border-style:solid}
+.modelo-editor{margin-bottom:6px}
+.me-title{margin:0 0 12px;font-size:15px;color:var(--navy)}
+.modelo-editor + .mblock{border-top:1px solid var(--line)}

@@ -16,12 +16,27 @@ export const revalidate = 60;
 export default async function HomePage() {
   const modelos = await getModels();
   const unidades = await getUnidadesDisponibles();
-  const imgs = await getSettings(['hero_image', 'nosotros_image', 'material_image', 'faqs_image', 'franja_image']);
+  const imgs = await getSettings([
+    'hero_image', 'nosotros_image', 'material_image', 'faqs_image', 'franja_image',
+    'hero_eyebrow', 'hero_title', 'hero_subtitle', 'hero_desc',
+    'nosotros_title', 'nosotros_p1', 'nosotros_p2',
+  ]);
   const heroImg = imgs['hero_image'] ?? null;
   const nosotrosImg = imgs['nosotros_image'] ?? null;
   const materialImg = imgs['material_image'] ?? null;
   const faqsImg = imgs['faqs_image'] ?? null;
   const franjaImg = imgs['franja_image'] ?? null;
+
+  // textos editables (con valores por defecto si no se han definido)
+  const t = {
+    heroEyebrow: imgs['hero_eyebrow'] || 'Aluminio naval · Villavicencio, Meta',
+    heroTitle: imgs['hero_title'] || 'Embarcaciones en aluminio naval',
+    heroSubtitle: imgs['hero_subtitle'] || 'Diseñadas para navegar, construidas para durar.',
+    heroDesc: imgs['hero_desc'] || 'Fabricamos embarcaciones de alta calidad en aluminio naval, garantizando seguridad, desempeño y resistencia en cada travesía. Soluciones náuticas a tu medida.',
+    nosotrosTitle: imgs['nosotros_title'] || 'Pasión por fabricar embarcaciones confiables',
+    nosotrosP1: imgs['nosotros_p1'] || 'En Alutreck SAS creemos que una embarcación es mucho más que un medio de transporte: es una herramienta de trabajo, una inversión y una fuente de experiencias. Por eso nos especializamos en la fabricación de embarcaciones menores en aluminio naval, con materiales de alta calidad y procesos que garantizan resistencia, seguridad y larga vida útil.',
+    nosotrosP2: imgs['nosotros_p2'] || 'Desde Villavicencio, Meta, atendemos clientes en todo el país, desarrollando embarcaciones para pesca, recreación, turismo, transporte y trabajo. Cada bote que sale de nuestro taller refleja nuestro compromiso con la calidad y la atención al detalle.',
+  };
 
   return (
     <>
@@ -31,12 +46,9 @@ export default async function HomePage() {
       <section className="hero" id="inicio">
         <div className="wrap hero-in">
           <div>
-            <span className="eyebrow">Aluminio naval · Villavicencio, Meta</span>
-            <h1>Embarcaciones en aluminio naval <em>Diseñadas para navegar, construidas para durar.</em></h1>
-            <p className="lede">
-              Fabricamos embarcaciones de alta calidad en aluminio naval, garantizando seguridad,
-              desempeño y resistencia en cada travesía. Soluciones náuticas a tu medida.
-            </p>
+            <span className="eyebrow">{t.heroEyebrow}</span>
+            <h1>{t.heroTitle} <em>{t.heroSubtitle}</em></h1>
+            <p className="lede">{t.heroDesc}</p>
             <div className="hero-cta">
               <Link className="btn btn-solid" href="#productos">Ver modelos <span className="arr">→</span></Link>
               <Link className="btn btn-line" href="#contacto" style={{ color: '#fff', borderColor: 'rgba(255,255,255,.5)' }}>Cotiza ahora <span className="arr">→</span></Link>
@@ -71,19 +83,9 @@ export default async function HomePage() {
         <div className="wrap about-grid">
           <div className="about-text">
             <span className="eyebrow">Nosotros</span>
-            <h2 className="disp">Pasión por fabricar embarcaciones confiables</h2>
-            <p>
-              En Alutreck SAS creemos que una embarcación es mucho más que un medio de transporte: es
-              una herramienta de trabajo, una inversión y una fuente de experiencias. Por eso nos
-              especializamos en la fabricación de embarcaciones menores en aluminio naval, con
-              materiales de alta calidad y procesos que garantizan resistencia, seguridad y larga vida
-              útil.
-            </p>
-            <p>
-              Desde Villavicencio, Meta, atendemos clientes en todo el país, desarrollando
-              embarcaciones para pesca, recreación, turismo, transporte y trabajo. Cada bote que sale
-              de nuestro taller refleja nuestro compromiso con la calidad y la atención al detalle.
-            </p>
+            <h2 className="disp">{t.nosotrosTitle}</h2>
+            <p>{t.nosotrosP1}</p>
+            <p>{t.nosotrosP2}</p>
           </div>
           <div className="about-media">
             <SectionImage src={nosotrosImg} alt="Taller Alutreck" />

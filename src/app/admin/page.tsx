@@ -4,12 +4,14 @@ import { useEffect, useState, useCallback } from 'react';
 import { getBrowserClient } from '@/lib/supabase/client';
 import { resizeImage } from '@/lib/resize-image';
 import { UnidadesPanel } from '@/components/UnidadesPanel';
+import { ModeloEditor } from '@/components/ModeloEditor';
+import { TextosPanel } from '@/components/TextosPanel';
 
 const BUCKET = 'media';
 
 type Modelo = { id: string; slug: string; nombre: string };
 type MediaItem = { id: string; url: string };
-type Mode = 'none' | 'inicio' | 'modelo' | 'unidades';
+type Mode = 'none' | 'inicio' | 'textos' | 'modelo' | 'modelo-nuevo' | 'unidades';
 
 const SLOTS = [
   { key: 'hero_image', label: 'Portada principal (hero)', help: 'Imagen grande de la parte superior.', maxW: 1920 },
@@ -186,11 +188,13 @@ export default function AdminPage() {
         <aside className="admin-side">
           <div className="side-title">Página de inicio</div>
           <button className={`side-item ${mode === 'inicio' ? 'on' : ''}`} onClick={pickInicio}>🏠 Imágenes del inicio</button>
+          <button className={`side-item ${mode === 'textos' ? 'on' : ''}`} onClick={() => { setMode('textos'); setSel(null); }}>📝 Textos de la página</button>
           <button className={`side-item ${mode === 'unidades' ? 'on' : ''}`} onClick={() => { setMode('unidades'); setSel(null); }}>🚤 Entrega inmediata</button>
           <div className="side-title">Modelos</div>
           {modelos.map((m) => (
             <button key={m.id} className={`side-item ${mode === 'modelo' && sel?.id === m.id ? 'on' : ''}`} onClick={() => pickModelo(m)}>{m.nombre}</button>
           ))}
+          <button className={`side-item side-add ${mode === 'modelo-nuevo' ? 'on' : ''}`} onClick={() => { setMode('modelo-nuevo'); setSel(null); }}>+ Nuevo modelo</button>
         </aside>
 
         <main className="admin-main">
@@ -199,6 +203,17 @@ export default function AdminPage() {
           {mode === 'none' && <p className="hint-pick">Elige una opción de la izquierda.</p>}
 
           {mode === 'unidades' && <UnidadesPanel supabase={supabase} />}
+
+          {mode === 'textos' && <TextosPanel supabase={supabase} />}
+
+          {mode === 'modelo-nuevo' && (
+            <>
+              <h2>Nuevo modelo</h2>
+              <p className="hint-pick">Crea el modelo con sus datos. Al guardarlo podrás subirle fotos, videos y frames del 360.</p>
+              <ModeloEditor supabase={supabase} modeloId={null}
+                onSaved={(m) => { loadModelos(); pickModelo(m); }} />
+            </>
+          )}
 
           {mode === 'inicio' && (
             <>
@@ -229,6 +244,9 @@ export default function AdminPage() {
           {mode === 'modelo' && sel && (
             <>
               <h2>{sel.nombre}</h2>
+              <ModeloEditor supabase={supabase} modeloId={sel.id}
+                onSaved={(m) => { loadModelos(); setSel(m); }}
+                onDeleted={() => { loadModelos(); setMode('none'); setSel(null); }} />
               <MediaBlock title="Fotos (la primera es la portada del modelo)" kind="foto" accept="image/*" items={fotos}
                 onUpload={upload} onRemove={remove} render={(it) => <img src={it.url} alt="" />} />
               <MediaBlock title="Videos (mp4)" kind="video" accept="video/mp4,video/*" items={videos}
