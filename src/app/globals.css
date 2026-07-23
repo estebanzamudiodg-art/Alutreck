@@ -348,14 +348,14 @@ img,video{max-width:100%}
 
 /* ====== imágenes de sección ====== */
 .about-text p{margin:0 0 14px}
-.sec-img{width:100%;border-radius:14px;border:1px solid var(--line);display:block;object-fit:cover;box-shadow:var(--shadow)}
-.about-media .sec-img{aspect-ratio:4/3}
+.sec-img{width:100%;height:340px;border-radius:14px;border:1px solid var(--line);display:block;object-fit:cover;box-shadow:var(--shadow)}
+.about-media .sec-img{height:360px}
 .why-media{margin-top:22px}
-.why-media .sec-img{aspect-ratio:16/10}
-.sec-ph{position:relative;width:100%;aspect-ratio:4/3;border-radius:14px;border:1px dashed #C3CCD6;background:linear-gradient(160deg,#E4E8EE,#D2D9E1);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.why-media .sec-img{height:240px}
+.sec-ph{position:relative;width:100%;height:340px;border-radius:14px;border:1px dashed #C3CCD6;background:linear-gradient(160deg,#E4E8EE,#D2D9E1);display:flex;align-items:center;justify-content:center;overflow:hidden}
 .sec-ph .art{width:78%}
 .sec-ph .cap{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--steel);background:rgba(255,255,255,.75);padding:5px 12px;border-radius:6px;white-space:nowrap}
-.why-media .sec-ph{aspect-ratio:16/10}
+.why-media .sec-ph{height:240px}
 
 /* ====== franja ancha ====== */
 .franja{margin:26px 0;background:linear-gradient(120deg,var(--navy),#0A3A6B);background-size:cover;background-position:center}
@@ -366,9 +366,9 @@ img,video{max-width:100%}
 @media(max-width:600px){.franja-in{padding:44px 0}.franja-in h2{font-size:26px}}
 
 /* ====== imagen en preguntas frecuentes ====== */
-.faqs-media{margin-top:22px;max-width:420px}
-.faqs-media .sec-img{aspect-ratio:4/3}
-.faqs-media .sec-ph{aspect-ratio:4/3}
+.faqs-media{margin-top:22px;max-width:360px}
+.faqs-media .sec-img{height:260px}
+.faqs-media .sec-ph{height:260px}
 
 /* ====== acceso administrador (footer) ====== */
 .admin-link{color:rgba(255,255,255,.6);font-size:12px;text-decoration:none;border:1px solid rgba(255,255,255,.25);padding:6px 14px;border-radius:6px;transition:all .2s;white-space:nowrap}
@@ -399,3 +399,5 @@ img,video{max-width:100%}
 .modelo-editor{margin-bottom:6px}
 .me-title{margin:0 0 12px;font-size:15px;color:var(--navy)}
 .modelo-editor + .mblock{border-top:1px solid var(--line)}
+
+@media(max-width:600px){.sec-img,.sec-ph{height:220px}.about-media .sec-img,.why-media .sec-img,.faqs-media .sec-img,.why-media .sec-ph,.faqs-media .sec-ph{height:220px}.faqs-media{max-width:100%}}
