@@ -33,7 +33,16 @@ export default async function ModelPage({ params }: { params: { slug: string } }
 
         <div className="detail">
           <div className="detail-visual">
-            <Boat360Viewer frames={m.frames360} forma={m.forma} hex={m.hex} />
+            {m.frames360.length > 0 ? (
+              <Boat360Viewer frames={m.frames360} forma={m.forma} hex={m.hex} />
+            ) : m.imagenes.length > 0 ? (
+              <div className="visual-photo">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={m.imagenes[0]} alt={m.nombre} width="1200" height="900" fetchPriority="high" />
+              </div>
+            ) : (
+              <Boat360Viewer frames={[]} forma={m.forma} hex={m.hex} />
+            )}
           </div>
 
           <div className="detail-info">

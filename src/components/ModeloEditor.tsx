@@ -33,8 +33,9 @@ export function ModeloEditor({
       const specs = data.specs ?? {};
       setF({
         nombre: data.nombre ?? '', slug: data.slug ?? '', resumen: data.resumen ?? '',
-        descripcion: data.descripcion ?? '', forma: specs.forma === 'pontoon' ? 'pontoon' : 'v',
+        descripcion: data.descripcion ?? '',
         hex: specs.hex ?? '#8A9499', usos: (specs.usos ?? []).join(', '),
+        forma: specs.forma ?? 'v',
         orden: data.orden ?? 0, activo: data.activo !== false,
       });
     }
@@ -91,7 +92,8 @@ export function ModeloEditor({
         <div className="field"><label>Forma del casco</label>
           <select value={f.forma} onChange={(e) => set('forma', e.target.value)}>
             <option value="v">V (quilla en V)</option>
-            <option value="pontoon">Chata / fondo plano</option>
+            <option value="semichata">Semichata</option>
+            <option value="pontoon">Chata</option>
           </select></div>
         <div className="field"><label>Color de acento</label>
           <input type="color" value={f.hex} onChange={(e) => set('hex', e.target.value)} style={{ height: 44, padding: 4 }} /></div>
