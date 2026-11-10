@@ -2,13 +2,14 @@ import Link from 'next/link';
 import { SiteHeader } from '@/components/SiteHeader';
 import { ModelCard } from '@/components/ModelCard';
 import { UnidadCard } from '@/components/UnidadCard';
+import { TiendaGrid } from '@/components/TiendaGrid';
 import { RequestForm } from '@/components/RequestForm';
 import { FaqList } from '@/components/FaqList';
 import { Logo } from '@/components/Logo';
 import { HullArt } from '@/components/HullArt';
 import { SectionImage } from '@/components/SectionImage';
 import { IconShield, IconCheck, IconGear, IconWrench, IconAnchor, IconHandshake, IconLayers } from '@/components/Icons';
-import { getModels, getUnidadesDisponibles, getSettings } from '@/lib/queries';
+import { getModels, getUnidadesDisponibles, getSettings, getArticulos } from '@/lib/queries';
 import { BENEFICIOS_ALUMINIO, FAQS, CONTACTO } from '@/lib/seed-data';
 
 export const revalidate = 60;
@@ -16,6 +17,7 @@ export const revalidate = 60;
 export default async function HomePage() {
   const modelos = await getModels();
   const unidades = await getUnidadesDisponibles();
+  const articulos = await getArticulos();
   const imgs = await getSettings([
     'hero_image', 'nosotros_image', 'material_image', 'faqs_image', 'franja_image',
     'hero_eyebrow', 'hero_title', 'hero_subtitle', 'hero_desc',
@@ -156,6 +158,22 @@ export default async function HomePage() {
             <div className="grid-models grid-3">
               {unidades.map((u) => <UnidadCard key={u.id} u={u} />)}
             </div>
+          </div>
+        </section>
+      )}
+
+      {/* TIENDA */}
+      {articulos.length > 0 && (
+        <section className="tienda" id="tienda">
+          <div className="wrap">
+            <div className="models-head">
+              <div>
+                <span className="eyebrow">Tienda</span>
+                <h2 className="disp">Accesorios y equipamiento</h2>
+              </div>
+              <p>Artículos disponibles. Elige el color y cierra tu compra por WhatsApp.</p>
+            </div>
+            <TiendaGrid articulos={articulos} />
           </div>
         </section>
       )}

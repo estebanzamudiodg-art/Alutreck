@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { getBrowserClient } from '@/lib/supabase/client';
 import { resizeImage } from '@/lib/resize-image';
 import { UnidadesPanel } from '@/components/UnidadesPanel';
+import { TiendaPanel } from '@/components/TiendaPanel';
 import { ModeloEditor } from '@/components/ModeloEditor';
 import { TextosPanel } from '@/components/TextosPanel';
 
@@ -11,7 +12,7 @@ const BUCKET = 'media';
 
 type Modelo = { id: string; slug: string; nombre: string };
 type MediaItem = { id: string; url: string };
-type Mode = 'none' | 'inicio' | 'textos' | 'modelo' | 'modelo-nuevo' | 'unidades';
+type Mode = 'none' | 'inicio' | 'textos' | 'modelo' | 'modelo-nuevo' | 'unidades' | 'tienda';
 
 const SLOTS = [
   { key: 'hero_image', label: 'Portada principal (hero)', help: 'Imagen grande de la parte superior.', maxW: 1920 },
@@ -190,6 +191,7 @@ export default function AdminPage() {
           <button className={`side-item ${mode === 'inicio' ? 'on' : ''}`} onClick={pickInicio}>🏠 Imágenes del inicio</button>
           <button className={`side-item ${mode === 'textos' ? 'on' : ''}`} onClick={() => { setMode('textos'); setSel(null); }}>📝 Textos de la página</button>
           <button className={`side-item ${mode === 'unidades' ? 'on' : ''}`} onClick={() => { setMode('unidades'); setSel(null); }}>🚤 Entrega inmediata</button>
+          <button className={`side-item ${mode === 'tienda' ? 'on' : ''}`} onClick={() => { setMode('tienda'); setSel(null); }}>🛍️ Tienda</button>
           <div className="side-title">Modelos</div>
           {modelos.map((m) => (
             <button key={m.id} className={`side-item ${mode === 'modelo' && sel?.id === m.id ? 'on' : ''}`} onClick={() => pickModelo(m)}>{m.nombre}</button>
@@ -203,6 +205,8 @@ export default function AdminPage() {
           {mode === 'none' && <p className="hint-pick">Elige una opción de la izquierda.</p>}
 
           {mode === 'unidades' && <UnidadesPanel supabase={supabase} />}
+
+          {mode === 'tienda' && <TiendaPanel supabase={supabase} />}
 
           {mode === 'textos' && <TextosPanel supabase={supabase} />}
 

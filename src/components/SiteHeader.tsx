@@ -8,6 +8,7 @@ const LINKS = [
   { href: '/#inicio', label: 'Inicio' },
   { href: '/#productos', label: 'Embarcaciones' },
   { href: '/#disponibles', label: 'Entrega inmediata' },
+  { href: '/#tienda', label: 'Tienda' },
   { href: '/#nosotros', label: 'Nosotros' },
   { href: '/#preguntas', label: 'Preguntas' },
   { href: '/#contacto', label: 'Contacto' },

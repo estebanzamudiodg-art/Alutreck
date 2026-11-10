@@ -405,3 +405,38 @@ img,video{max-width:100%}
 /* ====== foto principal del modelo (mientras no hay 360) ====== */
 .visual-photo{border-radius:14px;overflow:hidden;border:1px solid var(--line);background:#E4E8EE}
 .visual-photo img{width:100%;height:auto;max-height:70vh;object-fit:cover;display:block}
+
+/* ====== tienda (vista pública) ====== */
+.tienda{padding:20px 0 30px}
+.art-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.art-card{background:var(--paper);border:1px solid var(--line);border-radius:12px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s}
+.art-card:hover{transform:translateY(-4px);box-shadow:var(--shadow)}
+.art-ph{aspect-ratio:1;background:linear-gradient(160deg,#E4E8EE,#CDD4DC);display:flex;align-items:center;justify-content:center;overflow:hidden}
+.art-ph img{width:100%;height:100%;object-fit:cover;display:block}
+.art-ph .art{width:80%}
+.art-b{padding:16px;display:flex;flex-direction:column;flex:1}
+.art-b h3{font-weight:800;font-size:17px;margin:0 0 4px;color:var(--navy);text-transform:uppercase;letter-spacing:.01em}
+.art-desc{font-size:13px;color:var(--ink-soft);margin:0 0 12px;line-height:1.5}
+.art-colores{margin-bottom:14px}
+.art-colores-lbl{font-size:12px;color:var(--ink-soft)}
+.art-colores-lbl b{color:var(--navy)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:7px}
+.swatch{width:26px;height:26px;border-radius:50%;border:2px solid #fff;outline:1px solid var(--line);cursor:pointer;padding:0;transition:transform .15s}
+.swatch:hover{transform:scale(1.12)}
+.swatch.on{outline:2px solid var(--navy);outline-offset:1px}
+.art-foot{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.art-precio{font-weight:800;font-size:19px;color:var(--navy)}
+
+/* ====== tienda (admin: colores) ====== */
+.color-list{display:flex;flex-wrap:wrap;gap:8px;margin:6px 0 10px}
+.color-chip{display:inline-flex;align-items:center;gap:7px;background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:5px 10px 5px 8px;font-size:13px;font-weight:600;color:var(--navy)}
+.color-dot{width:16px;height:16px;border-radius:50%;outline:1px solid var(--line)}
+.color-x{background:none;border:0;color:var(--ink-soft);cursor:pointer;font-size:12px;padding:0 2px}
+.color-x:hover{color:#B23B3B}
+.color-add{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.color-add input[type=text],.color-add input:not([type]){flex:1;min-width:160px}
+
+/* ====== botón WhatsApp del formulario ====== */
+.wa-btn{background:#25D366 !important;border-color:#25D366 !important;color:#0A2E1A !important;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.wa-btn:hover{background:#1FBF5B !important;border-color:#1FBF5B !important}
+.done .wa-btn{margin:14px 0 6px;text-decoration:none;padding:14px 22px;border-radius:10px;font-weight:800}

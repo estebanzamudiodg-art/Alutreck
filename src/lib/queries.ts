@@ -148,3 +148,41 @@ export async function getUnidadesDisponibles(): Promise<UnidadDisponible[]> {
     return unidadesDisponibles();
   }
 }
+
+import type { Articulo } from './types';
+
+export async function getArticulos(): Promise<Articulo[]> {
+  const supabase = getServerClient();
+  if (!supabase) return [];
+  try {
+    const { data, error } = await supabase
+      .from('articulos')
+      .select('id, nombre, descripcion, precio, colores, orden')
+      .eq('activo', true)
+      .order('orden', { ascending: true });
+    if (error || !data || data.length === 0) return [];
+
+    const ids = data.map((a: any) => a.id);
+    const { data: imgs } = await supabase
+      .from('articulo_imagenes')
+      .select('articulo_id, url, orden')
+      .in('articulo_id', ids)
+      .order('orden', { ascending: true });
+    const byArt: Record<string, string[]> = {};
+    (imgs ?? []).forEach((im: any) => {
+      (byArt[im.articulo_id] ??= []).push(im.url);
+    });
+
+    return data.map((a: any) => ({
+      id: a.id,
+      nombre: a.nombre ?? '',
+      descripcion: a.descripcion ?? undefined,
+      precio: a.precio != null ? Number(a.precio) : null,
+      colores: Array.isArray(a.colores) ? a.colores : [],
+      imagenes: byArt[a.id] ?? [],
+      orden: a.orden ?? 0,
+    }));
+  } catch {
+    return [];
+  }
+}

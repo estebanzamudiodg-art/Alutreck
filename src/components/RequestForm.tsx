@@ -15,33 +15,58 @@ export function RequestForm({ modeloInicial = '' }: { modeloInicial?: string }) 
     ancho_piso: '', capacidad_carga: '', cantidad_bancas: '',
     mensaje: '',
   });
+  const [waLink, setWaLink] = useState('');
   const set = (k: string, v: string) => setF((p) => ({ ...p, [k]: v }));
 
-  async function submit() {
+  function construirMensajeWA(): string {
+    const L: string[] = [];
+    L.push('Hola Alutreck, quiero cotizar una embarcación.');
+    L.push('');
+    L.push(`*Modelo:* ${f.modelo}`);
+    L.push(`*Nombre:* ${f.nombre}`);
+    L.push(`*WhatsApp:* ${f.tel}`);
+    if (f.ciudad) L.push(`*Ciudad:* ${f.ciudad}`);
+    if (f.email) L.push(`*Correo:* ${f.email}`);
+    const car: string[] = [];
+    if (f.eslora) car.push(`- Eslora: ${f.eslora}`);
+    if (f.altura_espejo) car.push(`- Altura espejo: ${f.altura_espejo}`);
+    if (f.altura_banda) car.push(`- Altura banda: ${f.altura_banda}`);
+    if (f.ancho_piso) car.push(`- Ancho de piso: ${f.ancho_piso}`);
+    if (f.capacidad_carga) car.push(`- Capacidad: ${f.capacidad_carga}`);
+    if (f.cantidad_bancas) car.push(`- Bancas: ${f.cantidad_bancas}`);
+    if (car.length) { L.push(''); L.push('*Características:*'); L.push(...car); }
+    if (f.mensaje) { L.push(''); L.push(`*Comentarios:* ${f.mensaje}`); }
+    return `${CONTACTO.whatsappLink}?text=${encodeURIComponent(L.join('\n'))}`;
+  }
+
+  function submit() {
     if (!f.nombre || !f.tel) return;
-    setBusy(true);
+    const wa = construirMensajeWA();
+    setWaLink(wa);
+
+    // Abrir WhatsApp en el mismo gesto del clic (evita el bloqueo de ventanas emergentes)
+    window.open(wa, '_blank');
+
+    // Guardar también en la base como respaldo (en segundo plano, no bloquea)
     const supabase = getBrowserClient();
-    try {
-      if (supabase) {
-        await supabase.from('solicitudes').insert({
-          modelo: f.modelo,
-          cliente_nombre: f.nombre,
-          cliente_tel: f.tel,
-          cliente_email: f.email || null,
-          cliente_ciudad: f.ciudad || null,
-          eslora: f.eslora || null,
-          altura_espejo: f.altura_espejo || null,
-          altura_banda: f.altura_banda || null,
-          ancho_piso: f.ancho_piso || null,
-          capacidad_carga: f.capacidad_carga || null,
-          cantidad_bancas: f.cantidad_bancas || null,
-          mensaje: f.mensaje || null,
-        });
-      }
-      setSent(true);
-    } finally {
-      setBusy(false);
+    if (supabase) {
+      supabase.from('solicitudes').insert({
+        modelo: f.modelo,
+        cliente_nombre: f.nombre,
+        cliente_tel: f.tel,
+        cliente_email: f.email || null,
+        cliente_ciudad: f.ciudad || null,
+        eslora: f.eslora || null,
+        altura_espejo: f.altura_espejo || null,
+        altura_banda: f.altura_banda || null,
+        ancho_piso: f.ancho_piso || null,
+        capacidad_carga: f.capacidad_carga || null,
+        cantidad_bancas: f.cantidad_bancas || null,
+        mensaje: f.mensaje || null,
+      }).then(() => {}, () => {});
     }
+
+    setSent(true);
   }
 
   if (sent) {
@@ -49,10 +74,16 @@ export function RequestForm({ modeloInicial = '' }: { modeloInicial?: string }) 
       <div className="form-card">
         <div className="done">
           <div className="ic">✓</div>
-          <h3 className="disp">Solicitud enviada a revisión</h3>
+          <h3 className="disp">Último paso: envía tu solicitud</h3>
           <p>
-            Recibimos tu requerimiento de la {f.modelo}. Nuestro equipo lo revisa y te contacta con
-            una propuesta ajustada. También puedes escribirnos por WhatsApp al {CONTACTO.whatsapp}.
+            Se abrió WhatsApp con tu solicitud de la {f.modelo} ya escrita. <strong>Solo toca
+            “enviar”</strong> en WhatsApp para que nos llegue y te contactemos con una propuesta.
+          </p>
+          <a className="send wa-btn" href={waLink} target="_blank" rel="noopener noreferrer">
+            Abrir WhatsApp y enviar
+          </a>
+          <p className="smallprint">
+            ¿No se abrió WhatsApp? Toca el botón de arriba. O escríbenos al {CONTACTO.whatsapp}.
           </p>
         </div>
       </div>
@@ -104,11 +135,11 @@ export function RequestForm({ modeloInicial = '' }: { modeloInicial?: string }) 
         <textarea rows={3} value={f.mensaje} onChange={(e) => set('mensaje', e.target.value)}
           placeholder="Distribución, equipamiento, zona de navegación, motor de preferencia…" /></div>
 
-      <button className="send" onClick={submit} disabled={busy || !f.nombre || !f.tel}>
-        {busy ? 'Enviando…' : 'Enviar solicitud a revisión'}
+      <button className="send wa-btn" onClick={submit} disabled={busy || !f.nombre || !f.tel}>
+        Enviar solicitud por WhatsApp
       </button>
       <p className="smallprint">
-        Indícanos las medidas que necesitas y revisamos tu requerimiento para enviarte una propuesta.
+        Al enviar, se abre WhatsApp con tus datos ya escritos para que toques “enviar”.
         Los campos con * son obligatorios.
       </p>
     </div>

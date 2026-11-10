@@ -48,3 +48,15 @@ export interface UnidadDisponible {
   cantidad_bancas: string;
   equipamiento?: string;     // texto libre opcional
 }
+
+// Artículo de la tienda (con precio y compra por WhatsApp)
+export interface ColorVariante { nombre: string; hex: string; }
+export interface Articulo {
+  id: string;
+  nombre: string;
+  descripcion?: string;
+  precio: number | null;     // en pesos; null = "consultar"
+  colores: ColorVariante[];
+  imagenes: string[];
+  orden?: number;
+}
